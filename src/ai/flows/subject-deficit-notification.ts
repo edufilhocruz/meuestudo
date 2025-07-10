@@ -31,6 +31,7 @@ const StudyCoachNotificationOutputSchema = z.object({
 });
 export type StudyCoachNotificationOutput = z.infer<typeof StudyCoachNotificationOutputSchema>;
 
+
 export async function studyCoachNotification(
   input: StudyCoachNotificationInput
 ): Promise<StudyCoachNotificationOutput> {
@@ -46,6 +47,7 @@ const prompt = ai.definePrompt({
 Analise os dados de desempenho do usuário. Compare seu tempo de estudo e taxa de acertos com a média de outros usuários.
 
 Dados de Desempenho:
+{{#if performanceData}}
 {{#each performanceData}}
 - Disciplina: {{subject}}
   - Tempo de Estudo do Usuário: {{studyTime}} minutos
@@ -54,12 +56,14 @@ Dados de Desempenho:
   - Tempo Médio de Estudo: {{averageStudyTime}} minutos
   - Taxa Média de Acertos: {{averageCorrectRate}}
 {{/each}}
+{{else}}
+- Nenhum dado de desempenho para hoje.
+{{/if}}
 
-Com base na sua análise, identifique UMA área principal para melhoria. Isso pode ser um tempo de estudo abaixo do esperado ou uma pontuação inferior à média em uma disciplina específica.
+**Sempre defina shouldNotify como true.**
 
-Se houver uma área clara para melhoria, defina shouldNotify como true e gere uma notificationMessage curta e acionável (máximo de 2 frases). A mensagem deve começar reconhecendo o esforço do usuário, depois apontar gentilmente a área de melhoria e oferecer uma dica concreta. Por exemplo: "Ótimo trabalho na sua sessão de estudos, {{userName}}! Notei que sua pontuação em Matemática está um pouco abaixo da média. Tente revisar os conceitos fundamentais antes de partir para problemas mais complexos."
-
-Se o usuário estiver com desempenho igual ou superior à média em todas as áreas, defina shouldNotify como false e notificationMessage como uma string vazia. Gere uma notificação apenas se houver necessidade de melhoria.
+- Se houver uma área clara para melhoria (pontuação baixa, etc.), gere uma "notificationMessage" curta e acionável (máximo de 2 frases) focada nessa área. Exemplo: "Ótimo trabalho, {{userName}}! Notei que sua pontuação em Matemática está um pouco abaixo da média. Que tal revisar os conceitos fundamentais?"
+- Se o desempenho do usuário for bom ou se não houver dados, gere uma "notificationMessage" com uma dica de estudo geral ou uma mensagem motivacional. Exemplo: "Continue com o ótimo trabalho, {{userName}}! Lembre-se de fazer pausas regulares para manter a mente afiada." ou "Um novo dia de estudos começou! Qual matéria vamos focar hoje para alcançar seus objetivos?"
   `,
 });
 

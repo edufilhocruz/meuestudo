@@ -1,12 +1,11 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
 import type { TestRecommendationOutput } from '@/ai/flows/test-recommendation-flow';
-import { getTestRecommendation } from '@/app/actions';
-import { Card } from '@/components/ui/card';
+import { getTestRecommendationAction } from '@/app/actions';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { Lightbulb, ChevronRight } from 'lucide-react';
+import { Lightbulb, ChevronRight, AlertTriangle } from 'lucide-react';
 
 interface AiRecommendationProps {
   performanceData: {
@@ -18,6 +17,8 @@ interface AiRecommendationProps {
 const AiRecommendation = ({ performanceData }: AiRecommendationProps) => {
     const [recommendation, setRecommendation] = useState<TestRecommendationOutput | null>(null);
     const [loading, setLoading] = useState(true);
+    // NOVO: Estado para guardar a mensagem de erro
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         const fetchRecommendation = async () => {
@@ -28,14 +29,16 @@ const AiRecommendation = ({ performanceData }: AiRecommendationProps) => {
 
             try {
                 const overallScore = performanceData.reduce((acc, subject) => acc + subject.score, 0) / performanceData.length;
-                const result = await getTestRecommendation({
+                const result = await getTestRecommendationAction({
                     userName: 'Ana',
                     overallScore: overallScore,
                     performanceBySubject: performanceData.map(({ subject, score }) => ({ subject, score })),
                 });
                 setRecommendation(result);
-            } catch (error) {
-                console.error("Failed to fetch AI recommendation:", error);
+            } catch (err) {
+                // ATUALIZADO: Captura o erro e atualiza o estado
+                console.error("Falha ao buscar recomendação da IA:", err);
+                setError("Não foi possível gerar a recomendação. Tente novamente mais tarde.");
                 setRecommendation(null);
             } finally {
                 setLoading(false);
@@ -57,6 +60,20 @@ const AiRecommendation = ({ performanceData }: AiRecommendationProps) => {
         )
     }
 
+    // NOVO: Renderiza a mensagem de erro se houver uma
+    if (error) {
+        return (
+            <Card className="flex items-center gap-4 rounded-2xl p-4 shadow-sm bg-destructive/10 border-destructive/20">
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-destructive/20 text-destructive">
+                    <AlertTriangle className="size-7" />
+                </div>
+                <div className="flex flex-col flex-1">
+                    <p className="text-base font-semibold leading-normal text-destructive">{error}</p>
+                </div>
+            </Card>
+        );
+    }
+    
     if (!recommendation) return null;
 
     return (

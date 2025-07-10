@@ -1,11 +1,11 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { getStudyCoachNotification } from '@/ai/flows/subject-deficit-notification';
+import { getStudyCoachNotificationAction } from '@/app/actions';
 import type { StudyCoachNotificationOutput } from '@/ai/flows/subject-deficit-notification';
 import { Card } from './ui/card';
 import { Skeleton } from './ui/skeleton';
-import { Bell, ChevronRight } from 'lucide-react';
+import { Lightbulb, ChevronRight } from 'lucide-react';
 
 export default function AiNotificationSection() {
   const [notification, setNotification] = useState<StudyCoachNotificationOutput | null>(null);
@@ -19,30 +19,32 @@ export default function AiNotificationSection() {
         const performanceData = performanceJSON ? JSON.parse(performanceJSON) : {};
         const todayPerformance = performanceData[today];
 
-        // Only fetch notification if there is performance data for today
-        if (todayPerformance && todayPerformance.questionsDone > 0) {
-          const result = await getStudyCoachNotification({
-            userName: 'Ana',
-            performanceData: [
-              {
-                subject: 'Desempenho Geral', // Using a generic subject name
-                studyTime: 0, // Study time is tracked separately for now
+        // Prepara os dados de entrada para a IA
+        const inputData = {
+          userName: 'Ana',
+          // Passa os dados de desempenho se existirem, senão, passa um array vazio
+          performanceData: (todayPerformance && todayPerformance.questionsDone > 0)
+            ? [{
+                subject: 'Desempenho Geral',
+                studyTime: 0, 
                 questionsDone: todayPerformance.questionsDone,
                 questionsCorrect: todayPerformance.questionsCorrect,
-                // Static averages for now, can be dynamic later
                 averageStudyTime: 60,
                 averageCorrectRate: 0.75,
-              }
-            ]
-          });
-          setNotification(result);
-        } else {
-          // No performance data, so no notification
-          setNotification({ shouldNotify: false, notificationMessage: '' });
-        }
+              }]
+            : []
+        };
+        
+        // Chama a IA incondicionalmente
+        const result = await getStudyCoachNotificationAction(inputData);
+        setNotification(result);
+
       } catch (error) {
         console.error("Failed to fetch AI notification:", error);
-        setNotification({ shouldNotify: false, notificationMessage: '' });
+        setNotification({ 
+          shouldNotify: true, 
+          notificationMessage: 'Dica do dia! Lembre-se de revisar os tópicos da semana anterior para fixar o conhecimento.' 
+        });
       } finally {
         setLoading(false);
       }
@@ -65,14 +67,18 @@ export default function AiNotificationSection() {
     }
 
     if (notification?.shouldNotify) {
-      const messageParts = notification.notificationMessage.split('!');
-      const title = messageParts[0] + '!';
+      // Usaremos o split para separar o título da descrição, se houver '!'
+      const messageParts = notification.notificationMessage.includes('!') 
+        ? notification.notificationMessage.split('!') 
+        : [notification.notificationMessage, ''];
+        
+      const title = messageParts[0] + (notification.notificationMessage.includes('!') ? '!' : '');
       const description = messageParts.slice(1).join('!').trim();
 
       return (
         <Card className="flex cursor-pointer items-center gap-4 p-4 shadow-sm transition-all hover:shadow-md">
           <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-            <Bell className="size-7" />
+            <Lightbulb className="size-7" />
           </div>
           <div className="flex-1">
             <p className="font-semibold text-card-foreground">{title}</p>
@@ -87,7 +93,6 @@ export default function AiNotificationSection() {
       );
     }
 
-    // Don't render the section if there's nothing to show
     return null;
   };
   
@@ -99,7 +104,7 @@ export default function AiNotificationSection() {
 
   return (
     <section className="flex flex-col gap-4">
-      <h3 className="text-lg font-bold">Notificações da IA</h3>
+      <h3 className="text-lg font-bold">Recomendações da IA</h3>
       {content}
     </section>
   );
