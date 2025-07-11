@@ -74,6 +74,13 @@
   * {
     @apply border-border;
   }
+  html,
+  body,
+  body > div:first-child,
+  div#__next {
+    @apply h-full;
+  }
+
   body {
     @apply bg-background text-foreground;
     min-height: max(884px, 100dvh);
