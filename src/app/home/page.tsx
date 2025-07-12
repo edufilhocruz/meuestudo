@@ -30,7 +30,7 @@ export default function HomePage() {
         </div>
         
         {/* Corpo principal */}
-        <div className="flex-1 p-4 md:p-10">
+        <div className="flex-1 p-4 pb-20 md:p-10 md:pb-10">
           <div className="max-w-4xl mx-auto">
             {/* Componentes compartilhados com estilos responsivos */}
             <ProfileSection />
