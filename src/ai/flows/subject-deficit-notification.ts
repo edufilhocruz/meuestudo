@@ -32,49 +32,18 @@ const StudyCoachNotificationOutputSchema = z.object({
 export type StudyCoachNotificationOutput = z.infer<typeof StudyCoachNotificationOutputSchema>;
 
 
-export async function studyCoachNotification(
-  input: StudyCoachNotificationInput
-): Promise<StudyCoachNotificationOutput> {
-  return studyCoachNotificationFlow(input);
+// export async function studyCoachNotification(
+//   input: StudyCoachNotificationInput
+// ): Promise<StudyCoachNotificationOutput> {
+//   return studyCoachNotificationFlow(input);
+// }
+// LLMA: Aqui será feita a chamada para o modelo LLMA futuramente
+// Todas as definições de prompt e flow do Genkit foram comentadas para evitar erro de modelo ausente.
+
+// Função mock para manter o frontend funcionando até a integração do LLMA
+export async function studyCoachNotification() {
+  return {
+    shouldNotify: true,
+    notificationMessage: 'Dica do dia! Lembre-se de revisar os tópicos da semana anterior para fixar o conhecimento.'
+  };
 }
-
-const prompt = ai.definePrompt({
-  name: 'studyCoachNotificationPrompt',
-  input: {schema: StudyCoachNotificationInputSchema},
-  output: {schema: StudyCoachNotificationOutputSchema},
-  prompt: `Você é um Coach de Estudos IA especialista. Seu tom é encorajador, positivo e prestativo. Seu objetivo é ajudar o usuário, {{userName}}, a melhorar seus hábitos de estudo.
-
-Analise os dados de desempenho do usuário. Compare seu tempo de estudo e taxa de acertos com a média de outros usuários.
-
-Dados de Desempenho:
-{{#if performanceData}}
-{{#each performanceData}}
-- Disciplina: {{subject}}
-  - Tempo de Estudo do Usuário: {{studyTime}} minutos
-  - Questões Feitas pelo Usuário: {{questionsDone}}
-  - Respostas Corretas do Usuário: {{questionsCorrect}}
-  - Tempo Médio de Estudo: {{averageStudyTime}} minutos
-  - Taxa Média de Acertos: {{averageCorrectRate}}
-{{/each}}
-{{else}}
-- Nenhum dado de desempenho para hoje.
-{{/if}}
-
-**Sempre defina shouldNotify como true.**
-
-- Se houver uma área clara para melhoria (pontuação baixa, etc.), gere uma "notificationMessage" curta e acionável (máximo de 2 frases) focada nessa área. Exemplo: "Ótimo trabalho, {{userName}}! Notei que sua pontuação em Matemática está um pouco abaixo da média. Que tal revisar os conceitos fundamentais?"
-- Se o desempenho do usuário for bom ou se não houver dados, gere uma "notificationMessage" com uma dica de estudo geral ou uma mensagem motivacional. Exemplo: "Continue com o ótimo trabalho, {{userName}}! Lembre-se de fazer pausas regulares para manter a mente afiada." ou "Um novo dia de estudos começou! Qual matéria vamos focar hoje para alcançar seus objetivos?"
-  `,
-});
-
-const studyCoachNotificationFlow = ai.defineFlow(
-  {
-    name: 'studyCoachNotificationFlow',
-    inputSchema: StudyCoachNotificationInputSchema,
-    outputSchema: StudyCoachNotificationOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);

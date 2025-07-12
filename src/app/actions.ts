@@ -2,7 +2,7 @@
 
 import { studyCoachNotification, StudyCoachNotificationInput } from '@/ai/flows/subject-deficit-notification';
 import { getTestRecommendation, TestRecommendationInput } from '@/ai/flows/test-recommendation-flow';
-import { GoogleGenerativeAI } from '@google/generative-ai'; // Import necessário para a nova função
+// import { GoogleGenerativeAI } from '@google/generative-ai'; // Import necessário para a nova função
 
 /**
  * Função auxiliar que tenta executar uma operação com um número de tentativas.
@@ -30,9 +30,15 @@ async function withRetry<T>(fn: () => Promise<T>, retries = 3, delay = 1000): Pr
 
 /**
  * Server Action para obter a notificação do coach de estudos.
+ * TODO: Integrar chamada ao LLMA aqui futuramente.
  */
 export async function getStudyCoachNotificationAction(input: StudyCoachNotificationInput) {
-  return await withRetry(() => studyCoachNotification(input));
+  // return await withRetry(() => studyCoachNotification(input));
+  // LLMA: Aqui será feita a chamada para o modelo LLMA futuramente
+  return {
+    shouldNotify: true,
+    notificationMessage: 'Dica do dia! Lembre-se de revisar os tópicos da semana anterior para fixar o conhecimento.'
+  };
 }
 
 /**
@@ -51,8 +57,8 @@ export async function getHomeRecommendation(): Promise<{ title: string; descript
       throw new Error('A chave da API do Gemini (GEMINI_API_KEY) não está configurada no ambiente.')
     }
 
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    // const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    // const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
     const prompt = `
       Gere uma recomendação de estudo motivacional e útil para um estudante que acabou de acessar a plataforma.
@@ -62,18 +68,18 @@ export async function getHomeRecommendation(): Promise<{ title: string; descript
       "description": uma descrição um pouco mais longa (1-2 frases) explicando a recomendação.
     `;
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text()?.replace(/`[^]*`/, '').trim(); // Remove code blocks
-    if (text) {
-      try {
-        const recommendation = JSON.parse(text);
-        return recommendation.title && recommendation.description ? recommendation : null;
-      } catch (e) {
-        console.error("Erro ao parsear JSON da recomendação da home:", e);
-        return { title: "Dica de Hoje:", description: "Explore os diferentes recursos da plataforma para otimizar seus estudos!" };
-      }
-    }
+    // const result = await model.generateContent(prompt);
+    // const response = await result.response;
+    // const text = response.text()?.replace(/`[^]*`/, '').trim(); // Remove code blocks
+    // if (text) {
+    //   try {
+    //     const recommendation = JSON.parse(text);
+    //     return recommendation.title && recommendation.description ? recommendation : null;
+    //   } catch (e) {
+    //     console.error("Erro ao parsear JSON da recomendação da home:", e);
+    //     return { title: "Dica de Hoje:", description: "Explore os diferentes recursos da plataforma para otimizar seus estudos!" };
+    //   }
+    // }
     return { title: "Bem-vindo!", description: "Comece explorando os simulados e acompanhe seu progresso." };
 
   } catch (error) {

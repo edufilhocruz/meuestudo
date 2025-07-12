@@ -8,7 +8,6 @@
  * - TestRecommendationOutput - The return type for the getTestRecommendation function.
  */
 
-import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
 const TestRecommendationInputSchema = z.object({
@@ -28,40 +27,51 @@ const TestRecommendationOutputSchema = z.object({
 export type TestRecommendationOutput = z.infer<typeof TestRecommendationOutputSchema>;
 
 
-export async function getTestRecommendation(
-  input: TestRecommendationInput
-): Promise<TestRecommendationOutput> {
-  return testRecommendationFlow(input);
+// LLMA: Aqui será feita a chamada para o modelo LLMA futuramente
+// Todas as definições de prompt e flow do Genkit foram comentadas para evitar erro de modelo ausente.
+
+// export async function getTestRecommendation(
+//   input: TestRecommendationInput
+// ): Promise<TestRecommendationOutput> {
+//   return testRecommendationFlow(input);
+// }
+
+// const prompt = ai.definePrompt({
+//   name: 'testRecommendationPrompt',
+//   input: {schema: TestRecommendationInputSchema},
+//   output: {schema: TestRecommendationOutputSchema},
+//   prompt: `Você é um Coach de Estudos IA. Analise os resultados do simulado do usuário {{userName}}.
+// 
+// Resultados:
+// - Pontuação Geral: {{overallScore}}%
+// - Desempenho por Matéria:
+// {{#each performanceBySubject}}
+//   - {{subject}}: {{score}}%
+// {{/each}}
+// 
+// 1.  Identifique a matéria com a **pior** pontuação.
+// 2.  Com base na pior matéria, sugira **um tópico específico e fundamental** para o usuário revisar. Seja muito específico. Por exemplo, se a pior matéria for 'Matemática', sugira 'Regra de Três' ou 'Equações de 1º Grau', não apenas 'Álgebra'. Se for 'Português', sugira 'Concordância Verbal' ou 'Uso da Crase'.
+// 3.  Forneça uma justificativa curta e direta para a recomendação.
+// 4.  Se todas as pontuações forem altas (acima de 80%), forneça um tópico para aprimoramento na matéria de menor pontuação.
+//   `,
+// });
+// 
+// const testRecommendationFlow = ai.defineFlow(
+//   {
+//     name: 'testRecommendationFlow',
+//     inputSchema: TestRecommendationInputSchema,
+//     outputSchema: TestRecommendationOutputSchema,
+//   },
+//   async input => {
+//     const {output} = await prompt(input);
+//     return output!;
+//   }
+// );
+
+// Função mock para manter o frontend funcionando até a integração do LLMA
+export async function getTestRecommendation() {
+  return {
+    topicToReview: 'Revisar Regra de Três',
+    justification: 'Seu desempenho em Matemática foi o menor. Foque nesse tópico para melhorar.'
+  };
 }
-
-const prompt = ai.definePrompt({
-  name: 'testRecommendationPrompt',
-  input: {schema: TestRecommendationInputSchema},
-  output: {schema: TestRecommendationOutputSchema},
-  prompt: `Você é um Coach de Estudos IA. Analise os resultados do simulado do usuário {{userName}}.
-
-Resultados:
-- Pontuação Geral: {{overallScore}}%
-- Desempenho por Matéria:
-{{#each performanceBySubject}}
-  - {{subject}}: {{score}}%
-{{/each}}
-
-1.  Identifique a matéria com a **pior** pontuação.
-2.  Com base na pior matéria, sugira **um tópico específico e fundamental** para o usuário revisar. Seja muito específico. Por exemplo, se a pior matéria for 'Matemática', sugira 'Regra de Três' ou 'Equações de 1º Grau', não apenas 'Álgebra'. Se for 'Português', sugira 'Concordância Verbal' ou 'Uso da Crase'.
-3.  Forneça uma justificativa curta e direta para a recomendação.
-4.  Se todas as pontuações forem altas (acima de 80%), forneça um tópico para aprimoramento na matéria de menor pontuação.
-  `,
-});
-
-const testRecommendationFlow = ai.defineFlow(
-  {
-    name: 'testRecommendationFlow',
-    inputSchema: TestRecommendationInputSchema,
-    outputSchema: TestRecommendationOutputSchema,
-  },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
-  }
-);

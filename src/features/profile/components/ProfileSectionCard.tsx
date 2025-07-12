@@ -7,9 +7,22 @@ interface InfoRowProps {
   value: string;
 }
 
+const LABELS_PT: Record<string, string> = {
+  name: 'Nome',
+  email: 'E-mail',
+  birthDate: 'Data de Nascimento',
+  device: 'Dispositivo',
+  lastLogin: 'Último Acesso',
+  status: 'Status',
+  plan: 'Plano',
+  nextBilling: 'Próxima Cobrança',
+  paymentMethod: 'Forma de Pagamento',
+  goal: 'Objetivo',
+};
+
 const InfoRow = ({ label, value }: InfoRowProps) => (
   <div className="flex justify-between items-center text-sm">
-    <p className="font-medium text-muted-foreground">{label}</p>
+    <p className="font-medium text-muted-foreground">{LABELS_PT[label] || label}</p>
     <p className="font-semibold text-card-foreground text-right">{value}</p>
   </div>
 );

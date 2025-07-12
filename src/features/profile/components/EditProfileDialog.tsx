@@ -27,6 +27,19 @@ export function EditProfileDialog({ isOpen, onOpenChange, section, data, onSave 
   
   const sectionTitle = section.charAt(0).toUpperCase() + section.slice(1);
 
+  const LABELS_PT: Record<string, string> = {
+    name: 'Nome',
+    email: 'E-mail',
+    birthDate: 'Data de Nascimento',
+    device: 'Dispositivo',
+    lastLogin: 'Último Acesso',
+    status: 'Status',
+    plan: 'Plano',
+    nextBilling: 'Próxima Cobrança',
+    paymentMethod: 'Forma de Pagamento',
+    goal: 'Objetivo',
+  };
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
@@ -37,7 +50,7 @@ export function EditProfileDialog({ isOpen, onOpenChange, section, data, onSave 
         <div className="grid gap-4 py-4">
           {Object.keys(data).map(key => (
             <div key={key} className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor={key} className="text-right">{key.charAt(0).toUpperCase() + key.slice(1)}</Label>
+              <Label htmlFor={key} className="text-right">{LABELS_PT[key] || (key.charAt(0).toUpperCase() + key.slice(1))}</Label>
               <Input id={key} value={formData[key] || ''} onChange={(e) => setFormData(f => ({ ...f, [key]: e.target.value }))} className="col-span-3" />
             </div>
           ))}

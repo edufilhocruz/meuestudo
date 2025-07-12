@@ -1,4 +1,3 @@
-// src/app/meta/page.tsx
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -36,7 +35,7 @@ export default function MetaPage() {
                                 <GoalSection title="Metas Adicionais" goals={goals.additionalGoals} onEditGoal={handleEditClick} />
                                 <GoalSection title="Preferências" goals={goals.preferences} onEditGoal={handleEditClick} />
                            </div>
-                           <footer className="mt-auto flex justify-end">
+                           <footer className="mt-auto flex justify-end pb-20 md:pb-0">
                                 <Button size="lg" className="h-12 w-full text-base font-bold shadow-lg md:w-auto">
                                     Editar Plano de Estudo
                                 </Button>
