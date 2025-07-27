@@ -62,7 +62,7 @@ export default function SimuladoPage() {
           </div>
 
           {/* Conteúdo da Página */}
-          <main className="flex-grow p-4 md:p-10">
+          <main className="flex-grow p-4 pb-20 md:p-10 md:pb-10">
             <div className="space-y-6 max-w-4xl mx-auto">
               {/* Todas as seções de conteúdo do simulado permanecem aqui... */}
               <section>
@@ -123,7 +123,7 @@ export default function SimuladoPage() {
       </div>
       
       {/* RODAPÉ FINAL */}
-      <footer className="sticky bottom-0 bg-card shadow-[0_-2px_4px_rgba(0,0,0,0.05)]">
+      <footer className="bg-card shadow-[0_-2px_4px_rgba(0,0,0,0.05)] pb-20 md:pb-0">
         <div className="flex gap-3 p-4 max-w-md mx-auto">
           <Button variant="secondary" size="lg" className="h-12 flex-1 text-base font-bold text-foreground">Ver Gabarito</Button>
           <Button size="lg" className="h-12 flex-1 text-base font-bold">Refazer</Button>

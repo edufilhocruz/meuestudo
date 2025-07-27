@@ -46,4 +46,4 @@ export async function studyCoachNotification() {
     shouldNotify: true,
     notificationMessage: 'Dica do dia! Lembre-se de revisar os tópicos da semana anterior para fixar o conhecimento.'
   };
-}
+  }

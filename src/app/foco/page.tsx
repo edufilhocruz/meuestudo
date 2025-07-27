@@ -49,6 +49,7 @@ export default function FocoPage() {
                   time={state.time}
                   totalDuration={state.totalDuration}
                   sessionLabel={sessionLabel}
+                  subject={focusMode === 'livre' ? state.subject : undefined}
                 />
                 <TimerControls
                   isActive={state.isActive}

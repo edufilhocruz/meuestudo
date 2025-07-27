@@ -21,10 +21,6 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;700;900&display=swap" rel="stylesheet" />
       </head>
-      {/* ALTERAÇÕES IMPORTANTES:
-        - `h-full`: Garante que o body ocupe 100% da altura.
-        - `overflow-x-hidden`: Previne a rolagem horizontal a nível global.
-      */}
       <body className={cn("h-full font-body antialiased overflow-x-hidden", "bg-background text-foreground")}>
         {children}
         <Toaster />

@@ -7,13 +7,15 @@ interface TimerDisplayProps {
   time: number;
   totalDuration: number;
   sessionLabel: string;
+  subject?: string;
 }
 
-export function TimerDisplay({ time, totalDuration, sessionLabel }: TimerDisplayProps) {
+export function TimerDisplay({ time, totalDuration, sessionLabel, subject }: TimerDisplayProps) {
   const progressCircle = useMemo(() => {
     const circumference = 2 * Math.PI * CIRCLE_RADIUS;
+    // Progresso: de 0% (vazio) até 100% (cheio)
     const progress = totalDuration > 0 ? ((totalDuration - time) / totalDuration) * 100 : 0;
-    return { circumference, strokeDashoffset: circumference - (progress / 100) * circumference };
+    return { circumference, strokeDashoffset: (1 - progress / 100) * circumference };
   }, [time, totalDuration]);
 
   return (
@@ -29,8 +31,13 @@ export function TimerDisplay({ time, totalDuration, sessionLabel }: TimerDisplay
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <p className="text-xl font-medium text-muted-foreground">{sessionLabel}</p>
-        <div className="text-5xl font-bold tracking-tighter text-foreground">{formatTime(time)}</div>
+        {/* Mostrar matéria em destaque no modo livre */}
+        {subject ? (
+          <p className="text-2xl font-bold text-primary mb-2">{subject}</p>
+        ) : (
+          <p className="text-2xl font-bold text-muted-foreground mb-2">{sessionLabel}</p>
+        )}
+        <div className="text-6xl font-bold tracking-tight text-foreground">{formatTime(time)}</div>
       </div>
     </div>
   );

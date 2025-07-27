@@ -7,9 +7,28 @@ import DesktopHeader from '@/components/desktop-header';
 import { useGoalsManager } from '@/features/goals/hooks/useGoalsManager';
 import { GoalSection } from '@/features/goals/components/GoalSection';
 import { EditGoalDialog } from '@/features/goals/components/EditGoalDialog';
+import { useState } from 'react';
 
 export default function MetaPage() {
   const { goals, dialogState, handleEditClick } = useGoalsManager();
+
+  // Estados controlados
+  const [score, setScore] = useState(25);
+  const [performance, setPerformance] = useState([
+    { subject: 'Português', score: 50, color: 'text-gray-900' },
+    { subject: 'Matemática', score: 0, color: 'text-destructive' },
+    { subject: 'Conhecimentos Gerais', score: 25, color: 'text-gray-900' },
+  ]);
+
+  function handleRefazer() {
+    setScore(0);
+    setPerformance([
+      { subject: 'Português', score: 0, color: 'text-gray-900' },
+      { subject: 'Matemática', score: 0, color: 'text-destructive' },
+      { subject: 'Conhecimentos Gerais', score: 0, color: 'text-gray-900' },
+    ]);
+    // Limpe outros estados relacionados ao simulado aqui
+  }
 
   return (
     <>
@@ -35,10 +54,11 @@ export default function MetaPage() {
                                 <GoalSection title="Metas Adicionais" goals={goals.additionalGoals} onEditGoal={handleEditClick} />
                                 <GoalSection title="Preferências" goals={goals.preferences} onEditGoal={handleEditClick} />
                            </div>
-                           <footer className="mt-auto flex justify-end pb-20 md:pb-0">
-                                <Button size="lg" className="h-12 w-full text-base font-bold shadow-lg md:w-auto">
-                                    Editar Plano de Estudo
-                                </Button>
+                           <footer className="bg-card shadow-[0_-2px_4px_rgba(0,0,0,0.05)] pb-20 md:pb-0">
+                                <div className="flex gap-3 p-4 max-w-md mx-auto">
+                                    <Button variant="secondary" size="lg" className="h-12 flex-1 text-base font-bold text-foreground">Ver Gabarito</Button>
+                                    <Button size="lg" className="h-12 flex-1 text-base font-bold" onClick={handleRefazer}>Refazer</Button>
+                                </div>
                             </footer>
                       </div>
                   </div>

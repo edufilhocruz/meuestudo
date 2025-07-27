@@ -11,8 +11,9 @@ interface TimerControlsProps {
 export function TimerControls({ isActive, timerStarted, onStartClick, onFinishClick }: TimerControlsProps) {
   return (
     <div className="mt-8 flex w-full max-w-sm flex-col items-center justify-center gap-4">
-      <Button size="lg" className="h-16 w-full transform px-8 text-xl font-bold leading-normal tracking-wide text-primary-foreground shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-xl" onClick={onStartClick}>
-        {isActive ? <Pause className="size-8" /> : <Play className="size-8" />}
+      <Button size="lg" className="h-24 w-full max-w-xl mx-auto transform px-16 text-2xl font-bold leading-normal tracking-wide text-primary-foreground shadow-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl" onClick={onStartClick}>
+        {/* Botão principal de iniciar/pausar, destaque especial para modo livre */}
+        {isActive ? <Pause className="size-16" /> : <Play className="size-16" />}
         <span className="truncate">{isActive ? 'Pausar' : 'Iniciar'}</span>
       </Button>
       {timerStarted && (

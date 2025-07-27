@@ -29,11 +29,18 @@ export function useFocusTimer(focusMode: FocusMode, selectedFreeTime: number) {
   const { toast } = useToast();
 
   const resetTimerState = useCallback(() => {
-    const newTime = focusMode === 'pomodoro' ? POMODORO_TIME : selectedFreeTime;
+    let newTime, newTotalDuration;
+    if (focusMode === 'pomodoro') {
+      newTime = POMODORO_TIME;
+      newTotalDuration = POMODORO_TIME;
+    } else {
+      newTime = 0;
+      newTotalDuration = 0;
+    }
     setState({
       ...initialState,
       time: newTime,
-      totalDuration: newTime,
+      totalDuration: newTotalDuration,
       pomodoroSession: 'focus',
     });
   }, [focusMode, selectedFreeTime]);

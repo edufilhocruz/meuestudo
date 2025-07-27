@@ -53,7 +53,7 @@ export function FocusModeSelector({
         </div>
       </section>
 
-      {focusMode === 'livre' && (
+      {focusMode === 'livre' && false && (
         <section className="mb-8">
           <h3 className="mb-4 text-center text-lg font-semibold text-foreground">Selecione o tempo</h3>
           <div className="grid grid-cols-4 gap-3">
@@ -62,7 +62,6 @@ export function FocusModeSelector({
               return (
                 <Button
                   key={minutes}
-                  // LÓGICA DE ESTILO ATUALIZADA
                   variant={isActive ? 'outline' : 'secondary'}
                   className={cn(
                       "h-12 w-full text-base font-bold shadow-sm",
